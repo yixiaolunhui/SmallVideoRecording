@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_recorder_video"
+    tools:context="com.dalong.recordlib.RecordVideoFragment">
+
+    <com.dalong.recordlib.SizeSurfaceView
+        android:id="@+id/recorder_view"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/recorder_facing"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        android:layout_width="@dimen/mcam_action_icon_size_smaller2"
+        android:layout_height="@dimen/mcam_action_icon_size_smaller2"
+        android:layout_gravity="center_vertical|start"
+        android:background="@drawable/mcam_front_selector"
+        android:padding="@dimen/mcam_content_inset_less"
+        android:scaleType="fitXY"
+        tools:ignore="ContentDescription" />
+
+
+
+
+    <LinearLayout
+        android:id="@+id/recording_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:elevation="@dimen/mcam_toolbar_elevation"
+        android:paddingBottom="@dimen/mcam_content_inset_less"
+        android:paddingLeft="@dimen/mcam_content_inset"
+        android:paddingRight="@dimen/mcam_content_inset"
+        android:paddingTop="@dimen/mcam_content_inset_less"
+        tools:ignore="UnusedAttribute">
+        <TextView
+            android:id="@+id/record_tv"
+            android:text="长按录制视频"
+            android:textSize="14sp"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.dalong.recordlib.view.RecordStartView
+            android:id="@+id/recorder_videobtn"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"
+            app:mRingMax="15000"
+            android:layout_width="95dp"
+            android:layout_height="95dp" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

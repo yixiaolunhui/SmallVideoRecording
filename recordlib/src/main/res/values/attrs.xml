@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RecordStartView">
+        <attr name="mRingColor" format="color"/>
+        <attr name="mCenterColor" format="color"/>
+        <attr name="mRingProgressColor" format="color"/>
+        <attr name="mRingWidth" format="dimension"/>
+        <attr name="mRingMax" format="integer"/>
+    </declare-styleable>
+</resources>

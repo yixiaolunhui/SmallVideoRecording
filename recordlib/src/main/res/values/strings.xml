@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">recordLib</string>
+
+    <string name="mcam_defaultDuration">00:00</string>
+    <string name="prompt">提示</string>
+    <string name="ok">确认</string>
+    <string name="camera_reset">重录</string>
+    <string name="camera_save">保存</string>
+    <string name="camera_user">使用</string>
+</resources>
