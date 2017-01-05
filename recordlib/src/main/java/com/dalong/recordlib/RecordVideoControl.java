@@ -1,7 +1,9 @@
 package com.dalong.recordlib;
 
 import android.app.Activity;
+import android.content.Context;
 import android.hardware.Camera;
+import android.media.AudioManager;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.Build;
@@ -285,11 +287,6 @@ public class RecordVideoControl implements SurfaceHolder.Callback, MediaRecorder
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
         mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H263);
-        //设置分辨率，应设置在格式和编码器设置之后
-        mediaRecorder.setVideoSize(previewWidth, previewHeight);
         if (mCameraId == 1) {
             mediaRecorder.setOrientationHint(270);
         } else {
@@ -297,10 +294,15 @@ public class RecordVideoControl implements SurfaceHolder.Callback, MediaRecorder
         }
 
         try {
-            mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_QVGA));
+            mediaRecorder.setProfile(RecordVideoUtils.getBestCamcorderProfile(mCameraId));
         } catch (Exception e) {
             Log.e(TAG, "设置质量出错:" + e.getMessage());
             customMediaRecorder();
+        }
+
+        // 设置帧速率，应设置在格式和编码器设置
+        if (defaultVideoFrameRate != -1) {
+            mediaRecorder.setVideoFrameRate(defaultVideoFrameRate);
         }
         mediaRecorder.setOnInfoListener(this);
         mediaRecorder.setOnErrorListener(this);
@@ -329,6 +331,11 @@ public class RecordVideoControl implements SurfaceHolder.Callback, MediaRecorder
      */
     public void customMediaRecorder(){
         if (mediaRecorder != null) {
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H263);
+            //设置分辨率，应设置在格式和编码器设置之后
+            mediaRecorder.setVideoSize(previewWidth, previewHeight);
             mediaRecorder.setVideoEncodingBitRate(800 * 1024);
         }
     }

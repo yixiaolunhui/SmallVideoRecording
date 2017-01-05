@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
+import android.media.CamcorderProfile;
 import android.media.MediaMetadataRetriever;
 import android.support.annotation.ColorInt;
 
@@ -72,4 +73,44 @@ public class RecordVideoUtils {
 		Bitmap bitmap = media.getFrameAtTime();
 		return bitmap;
 	}
+
+
+	/**
+	 *
+	 * 解决录像时清晰度问题
+	 *
+	 * 视频清晰度顺序 High 1080 720 480 cif qvga gcif 详情请查看 CamcorderProfile.java
+	 * 在12秒mp4格式视频大小维持在1M左右时,以下四个选择效果最佳
+	 *
+	 * 不同的CamcorderProfile.QUALITY_ 代表每帧画面的清晰度,
+	 * 变换 profile.videoBitRate 可减少每秒钟帧数
+	 *
+	 * @param cameraID 前摄 Camera.CameraInfo.CAMERA_FACING_FRONT /后摄 Camera.CameraInfo.CAMERA_FACING_BACK
+	 * @return
+	 */
+	public static CamcorderProfile getBestCamcorderProfile(int cameraID){
+		CamcorderProfile profile = CamcorderProfile.get(cameraID,CamcorderProfile.QUALITY_LOW);
+		if(CamcorderProfile.hasProfile(cameraID,CamcorderProfile.QUALITY_480P)){
+			//对比下面720 这个选择 每帧不是很清晰
+			profile = CamcorderProfile.get(cameraID, CamcorderProfile.QUALITY_480P);
+			profile.videoBitRate = profile.videoBitRate/5;
+			return profile;
+		}
+		if(CamcorderProfile.hasProfile(cameraID,CamcorderProfile.QUALITY_720P)){
+			//对比上面480 这个选择 动作大时马赛克!!
+			profile = CamcorderProfile.get(cameraID,CamcorderProfile.QUALITY_720P);
+			profile.videoBitRate = profile.videoBitRate/35;
+			return profile;
+		}
+		if(CamcorderProfile.hasProfile(cameraID,CamcorderProfile.QUALITY_CIF)){
+			profile = CamcorderProfile.get(cameraID, CamcorderProfile.QUALITY_CIF);
+			return profile;
+		}
+		if(CamcorderProfile.hasProfile(cameraID,CamcorderProfile.QUALITY_QVGA)){
+			profile = CamcorderProfile.get(cameraID, CamcorderProfile.QUALITY_QVGA);
+			return profile;
+		}
+		return profile;
+	}
+
 }
