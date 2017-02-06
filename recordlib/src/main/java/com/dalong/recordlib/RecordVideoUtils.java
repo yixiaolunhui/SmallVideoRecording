@@ -1,5 +1,7 @@
 package com.dalong.recordlib;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.hardware.Camera;
@@ -8,6 +10,7 @@ import android.hardware.Camera.Size;
 import android.media.CamcorderProfile;
 import android.media.MediaMetadataRetriever;
 import android.support.annotation.ColorInt;
+import android.widget.Toast;
 
 import java.util.Comparator;
 import java.util.List;
@@ -113,4 +116,17 @@ public class RecordVideoUtils {
 		return profile;
 	}
 
+
+	/**
+	 * 检测当前设备是否配置闪光灯
+ 	 * @param mContext
+	 * @return
+     */
+	public boolean checkFlashlight(Context mContext) {
+		if (!mContext.getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
+			Toast.makeText(mContext.getApplicationContext(), "当前设备没有闪光灯", Toast.LENGTH_LONG).show();
+			return false;
+		}
+		return true;
+	}
 }

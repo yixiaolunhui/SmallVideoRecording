@@ -10,7 +10,7 @@
     <dimen name="mcam_regular_title_fontsize">16sp</dimen>
     <dimen name="mcam_action_icon_size">56dp</dimen>
     <dimen name="mcam_action_icon_size_smaller">48dp</dimen>
-    <dimen name="mcam_action_icon_size_smaller2">35dp</dimen>
+    <dimen name="mcam_action_icon_size_smaller2">40dp</dimen>
     <dimen name="mcam_action_tv">18sp</dimen>
 
 </resources>

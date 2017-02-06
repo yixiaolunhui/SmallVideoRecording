@@ -11,6 +11,28 @@
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/recorder_cancel"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/pda"
+        android:scaleType="fitXY"
+        tools:ignore="ContentDescription" />
+    <ImageButton
+        android:id="@+id/recorder_flash"
+        android:layout_alignParentRight="true"
+        android:layout_alignRight="@+id/recorder_facing"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="80dp"
+        android:layout_width="@dimen/mcam_action_icon_size_smaller2"
+        android:layout_height="@dimen/mcam_action_icon_size_smaller2"
+        android:layout_gravity="center_vertical|start"
+        android:background="@drawable/pdg"
+        android:padding="@dimen/mcam_content_inset_less"
+        android:scaleType="fitXY"
+        tools:ignore="ContentDescription" />
 
     <ImageButton
         android:id="@+id/recorder_facing"
@@ -19,13 +41,10 @@
         android:layout_width="@dimen/mcam_action_icon_size_smaller2"
         android:layout_height="@dimen/mcam_action_icon_size_smaller2"
         android:layout_gravity="center_vertical|start"
-        android:background="@drawable/mcam_front_selector"
+        android:background="@drawable/mcam_camera"
         android:padding="@dimen/mcam_content_inset_less"
         android:scaleType="fitXY"
         tools:ignore="ContentDescription" />
-
-
-
 
     <LinearLayout
         android:id="@+id/recording_layout"
@@ -41,7 +60,7 @@
         tools:ignore="UnusedAttribute">
         <TextView
             android:id="@+id/record_tv"
-            android:text="长按录制视频"
+            android:text="点击拍照,长按录像"
             android:textSize="14sp"
             android:layout_gravity="center"
             android:textColor="@color/white"
@@ -57,6 +76,5 @@
             android:layout_height="95dp" />
 
     </LinearLayout>
-
 
 </RelativeLayout>

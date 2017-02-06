@@ -55,7 +55,8 @@ public class RecordStartView extends View {
     private  long timeSpan=100;
     //开始时间
     private long startTime;
-
+    //是否录制中
+    private boolean isRecording=false;
 
     public RecordStartView(Context context) {
         this(context,null);
@@ -112,6 +113,7 @@ public class RecordStartView extends View {
      */
     private void startRecord() {
         if(mOnRecordButtonListener!=null){
+            isRecording=true;
             mOnRecordButtonListener.onStartRecord();
         }
         startTime=System.currentTimeMillis();
@@ -157,9 +159,15 @@ public class RecordStartView extends View {
                 progress=0;
                 centerScale=0f;
                 mHandler.removeMessages(RING_WHAT);
+                if(!isRecording){
+                    if(mOnRecordButtonListener!=null){
+                        mOnRecordButtonListener.onTakePhoto();
+                    }
+                }
                 if(mOnRecordButtonListener!=null){
                     mOnRecordButtonListener.onStopRecord();
                 }
+                isRecording=false;
                 break;
         }
         return true;
@@ -249,6 +257,7 @@ public class RecordStartView extends View {
     public interface OnRecordButtonListener{
         void onStartRecord();
         void onStopRecord();
+        void onTakePhoto();
     }
     public void setOnRecordButtonListener(OnRecordButtonListener mOnRecordButtonListener){
         this.mOnRecordButtonListener=mOnRecordButtonListener;

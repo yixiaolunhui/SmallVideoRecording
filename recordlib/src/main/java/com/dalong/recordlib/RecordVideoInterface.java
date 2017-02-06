@@ -27,4 +27,9 @@ public interface RecordVideoInterface {
      * 录制出问题
      */
     void  onRecordError();
+
+    /**
+     * 拍照
+     */
+    void  onTakePhoto(byte[] data);
 }

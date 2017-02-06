@@ -1,10 +1,9 @@
 package com.dalong.recordlib;
 
 import android.app.Activity;
-import android.content.Context;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
-import android.media.AudioManager;
-import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Handler;
@@ -13,6 +12,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +27,9 @@ public class RecordVideoControl implements SurfaceHolder.Callback, MediaRecorder
         MediaRecorder.OnErrorListener,Runnable {
 
     public final String TAG = RecordVideoControl.class.getSimpleName();
+    public static final int FLASH_MODE_OFF = 0;
+    public static final int FLASH_MODE_ON = 1;
+    public static int flashType=FLASH_MODE_OFF;
     private int previewWidth = 640;//预览宽
     private int previewHeight = 480;//预览高
     private int maxTime=10000;//最大录制时间
@@ -63,6 +66,13 @@ public class RecordVideoControl implements SurfaceHolder.Callback, MediaRecorder
         }
     }
 
+    /**
+     * 摄像头方向
+     * @return
+     */
+    public  int getCameraFacing(){
+        return mCameraId;
+    }
     /**
      * 开启摄像头预览
      * @param holder
@@ -101,25 +111,19 @@ public class RecordVideoControl implements SurfaceHolder.Callback, MediaRecorder
 
     /**
      * 切换摄像头
-     * @param view 点击切换的view 这里处理了点击事件
+     * @param v 点击切换的view 这里处理了点击事件
      */
-    public void changeCamera(final View view) {
-        view.setOnClickListener(new View.OnClickListener() {
+    public void changeCamera(final View v) {
+        if (v != null)
+            v.setEnabled(false);
+        changeCamera();
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onClick(final View v) {
+            public void run() {
                 if (v != null)
-                    v.setEnabled(false);
-                changeCamera();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (v != null)
-                            v.setEnabled(true);
-                    }
-                }, 1000);
+                    v.setEnabled(true);
             }
-        });
-
+        }, 1000);
     }
 
     /**
@@ -177,6 +181,9 @@ public class RecordVideoControl implements SurfaceHolder.Callback, MediaRecorder
         if (isHave) {
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
         }
+        parameters.setFlashMode(flashType==FLASH_MODE_ON ?
+                Camera.Parameters.FLASH_MODE_TORCH :
+                Camera.Parameters.FLASH_MODE_OFF);
         mCamera.setParameters(parameters);
     }
 
@@ -376,6 +383,55 @@ public class RecordVideoControl implements SurfaceHolder.Callback, MediaRecorder
         }
     }
 
+    /**
+     * 设置闪光灯模式
+     * @param flashType
+     */
+    public  void setFlashMode(int flashType) {
+        this.flashType = flashType;
+        String flashMode = null;
+        switch (flashType) {
+            case FLASH_MODE_ON:
+                flashMode = Camera.Parameters.FLASH_MODE_TORCH;
+                break;
+            case FLASH_MODE_OFF:
+                flashMode = Camera.Parameters.FLASH_MODE_OFF;
+            default:
+                break;
+        }
+        if (flashMode != null) {
+            Camera.Parameters parameters = mCamera.getParameters();
+            parameters.setFlashMode(flashMode);
+            mCamera.setParameters(parameters);
+        }
+    }
+
+    /**
+     * 拍照
+     */
+    public void  takePhoto(){
+        mCamera.setPreviewCallback(new Camera.PreviewCallback() {
+            @Override
+            public void onPreviewFrame(byte[] data, Camera camera) {
+                camera.setPreviewCallback(null);
+                if (mCamera == null)
+                    return;
+                Camera.Parameters parameters = camera.getParameters();
+                int width = parameters.getPreviewSize().width;
+                int height = parameters.getPreviewSize().height;
+
+                YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
+                byte[] bytes = out.toByteArray();
+                if (mRecordVideoInterface != null) {
+                    mRecordVideoInterface.onTakePhoto(bytes);
+                }
+                //设置这个可以达到预览的效果
+//                mCamera.setPreviewCallback(this);
+            }
+        });
+    }
 
     /**
      * 释放mediaRecorder
