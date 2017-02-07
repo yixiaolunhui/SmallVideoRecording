@@ -3,7 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.dalong.recordlib.VideoPlayFragment">
-
+    <ImageView
+        android:id="@+id/photo_play"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <VideoView
         android:id="@+id/video_play"
         android:layout_alignParentLeft="true"
@@ -12,5 +20,25 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+
+    <ImageView
+        android:id="@+id/video_cancel"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="30dp"
+        android:src="@drawable/mcam_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/video_use"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/mcam_ok"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

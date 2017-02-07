@@ -183,7 +183,6 @@ public class RecordVideoControl implements SurfaceHolder.Callback, MediaRecorder
         if (isHave) {
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
         }
-        Log.v("121212","setCameraParameter");
         parameters.setFlashMode(flashType==FLASH_MODE_ON ?
                 Camera.Parameters.FLASH_MODE_TORCH :
                 Camera.Parameters.FLASH_MODE_OFF);
@@ -270,7 +269,6 @@ public class RecordVideoControl implements SurfaceHolder.Callback, MediaRecorder
                     previewSize = size;
                     previewWidth = previewSize.width;
                     previewHeight = previewSize.height;
-                    Log.v(TAG, "previewWidth:" + previewWidth + "   previewHeight:" + previewHeight);
                     hasSize = true;
                     break;
                 }

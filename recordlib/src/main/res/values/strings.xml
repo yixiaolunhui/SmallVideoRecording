@@ -8,6 +8,6 @@
     <string name="camera_save">保存</string>
     <string name="camera_user">使用</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="camera_photo_path">dalong/photo/</string>
+
 </resources>

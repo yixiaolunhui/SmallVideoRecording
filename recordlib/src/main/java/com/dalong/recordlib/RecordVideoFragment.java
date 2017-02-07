@@ -1,9 +1,12 @@
 package com.dalong.recordlib;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,9 +16,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dalong.recordlib.view.RecordStartView;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class RecordVideoFragment extends Fragment implements RecordVideoInterface, RecordStartView.OnRecordButtonListener, View.OnClickListener {
@@ -93,7 +102,7 @@ public class RecordVideoFragment extends Fragment implements RecordVideoInterfac
         Log.v(TAG,"onRecordFinish:"+videoPath);
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, new VideoPlayFragment(videoPath),VideoPlayFragment.TAG)
+                .replace(R.id.fragment_container, new VideoPlayFragment(videoPath,VideoPlayFragment.FILE_TYPE_VIDEO),VideoPlayFragment.TAG)
                 .addToBackStack(null)
                 .commit();
     }
@@ -106,10 +115,39 @@ public class RecordVideoFragment extends Fragment implements RecordVideoInterfac
     @Override
     public void onTakePhoto(byte[] data) {
         Log.v(TAG,"onTakePhoto");
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-        //data  拿到图片数据显示
-        Toast.makeText(getActivity(), "拍照了", Toast.LENGTH_SHORT).show();
+        try {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            File mediaStorageDir = new File(
+                    Environment.getExternalStorageDirectory(),
+                    getActivity().getString(R.string.camera_photo_path)
+            );
+            if (!mediaStorageDir.exists()) {
+               mediaStorageDir.mkdirs();
+            }
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            File mediaFile = new File(
+                    mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp+ ".jpg"
+            );
+            FileOutputStream stream = new FileOutputStream(mediaFile);
+            stream.write(out.toByteArray());
+            stream.close();
+            // Mediascanner need to scan for the image saved
+            Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri fileContentUri = Uri.fromFile(mediaFile);
+            mediaScannerIntent.setData(fileContentUri);
+            getActivity().sendBroadcast(mediaScannerIntent);
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container,
+                            new VideoPlayFragment(mediaFile.getAbsolutePath(),
+                            VideoPlayFragment.FILE_TYPE_PHOTO,mRecordControl.getCameraFacing()),VideoPlayFragment.TAG)
+                    .addToBackStack(null)
+                    .commit();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     /**
