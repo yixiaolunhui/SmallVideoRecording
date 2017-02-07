@@ -91,6 +91,11 @@ public class RecordVideoFragment extends Fragment implements RecordVideoInterfac
     @Override
     public void onRecordFinish(String videoPath) {
         Log.v(TAG,"onRecordFinish:"+videoPath);
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, new VideoPlayFragment(videoPath),VideoPlayFragment.TAG)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

@@ -231,7 +231,7 @@ public class RecordStartView extends View {
                     if(centerScale<0.8){
                         centerScale+=0.05f;
                         postInvalidate();
-                        mHandler.sendEmptyMessageDelayed(CENTER_WHAT,10);
+                        mHandler.sendEmptyMessageDelayed(CENTER_WHAT,8);
                     }
                     break;
                 case RING_WHAT:

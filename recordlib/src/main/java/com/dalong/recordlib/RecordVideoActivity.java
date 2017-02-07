@@ -3,6 +3,7 @@ package com.dalong.recordlib;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -36,5 +37,9 @@ public class RecordVideoActivity extends AppCompatActivity {
                     .replace(R.id.fragment_container, new RecordVideoFragment(videoPath,maxSize,maxTime))
                     .commit();
         }
+    }
+
+    public void onCancel(View view) {
+        getSupportFragmentManager().popBackStack();
     }
 }

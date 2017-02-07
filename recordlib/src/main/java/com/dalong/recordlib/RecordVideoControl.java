@@ -1,6 +1,7 @@
 package com.dalong.recordlib;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -181,6 +183,7 @@ public class RecordVideoControl implements SurfaceHolder.Callback, MediaRecorder
         if (isHave) {
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
         }
+        Log.v("121212","setCameraParameter");
         parameters.setFlashMode(flashType==FLASH_MODE_ON ?
                 Camera.Parameters.FLASH_MODE_TORCH :
                 Camera.Parameters.FLASH_MODE_OFF);
@@ -209,8 +212,9 @@ public class RecordVideoControl implements SurfaceHolder.Callback, MediaRecorder
             if (mCamera != null)
                 mCamera.stopPreview();
             mIsPreviewing = false;
-            startCameraPreview(mSurfaceHolder);
             handleSurfaceChanged(mCamera);
+            startCameraPreview(mSurfaceHolder);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -258,11 +262,15 @@ public class RecordVideoControl implements SurfaceHolder.Callback, MediaRecorder
             // 使用 640*480 如果相机支持的话
             for (int i = 0; i < resolutionList.size(); i++) {
                 Camera.Size size = resolutionList.get(i);
+                WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
+                int width = wm.getDefaultDisplay().getWidth();
+                int height = wm.getDefaultDisplay().getHeight();
                 Log.v(TAG, "width:" + size.width + "   height:" + size.height);
-                if (size != null && size.width == 640 && size.height == 480) {
+                if (size != null && size.width == height && size.height == width) {
                     previewSize = size;
                     previewWidth = previewSize.width;
                     previewHeight = previewSize.height;
+                    Log.v(TAG, "previewWidth:" + previewWidth + "   previewHeight:" + previewHeight);
                     hasSize = true;
                     break;
                 }
